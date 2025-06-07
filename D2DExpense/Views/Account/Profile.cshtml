@@ -1,0 +1,185 @@
+﻿@using D2DExpense.Models
+@using Microsoft.AspNetCore.Mvc.Rendering
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model RegisterModel
+@{
+    ViewBag.Title = "Profile";
+    bool hasAgeAndMobile = Model.Age.HasValue && !string.IsNullOrEmpty(Model.MobileNumber);
+    bool hasMonthlyIncome = Model.MonthlyIncome > 0;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Update col-md-6 to col-12 col-md-6 for responsiveness -->
+        <div class="col-12 col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>User Profile</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Display Success or Error Message -->
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                    }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                    }
+
+                    <form asp-action="UpdateProfile" asp-controller="Account" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Email" />
+
+                        <!-- Name (Read-Only) -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" readonly />
+                        </div>
+
+                        <!-- Email (Read-Only) -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" readonly />
+                        </div>
+
+                        <!-- Age -->
+                        <div class="mb-3">
+                            <label asp-for="Age" class="form-label"></label>
+                            <input asp-for="Age" class="form-control" id="ageField" type="number" placeholder="Enter Age" required />
+                            <span asp-validation-for="Age" class="text-danger"></span>
+                        </div>
+
+                        <!-- Mobile Number -->
+                        <div class="mb-3">
+                            <label asp-for="MobileNumber" class="form-label"></label>
+                            <input asp-for="MobileNumber" class="form-control" id="mobileField" type="tel" placeholder="Enter Mobile Number" required />
+                            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                        </div>
+
+                        <!-- Monthly Income -->
+                        <div class="mb-3">
+                            <label asp-for="MonthlyIncome" class="form-label"></label>
+                            <input asp-for="MonthlyIncome" class="form-control" id="incomeField" type="number" placeholder="Enter Monthly Income" required readonly="@(hasMonthlyIncome ? "readonly" : null)" />
+                            <span asp-validation-for="MonthlyIncome" class="text-danger"></span>
+                        </div>
+
+                        <!-- Conditional Buttons -->
+                        @if (!hasAgeAndMobile || !hasMonthlyIncome)
+                        {
+                            <button type="submit" class="btn btn-success w-100" id="saveButton">Save</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary w-100" id="editButton">Edit</button>
+                            <button type="submit" class="btn btn-success w-100 mt-2 d-none" id="saveButton">Save Changes</button>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("editButton")?.addEventListener("click", function () {
+        document.getElementById("ageField").removeAttribute("readonly");
+        document.getElementById("mobileField").removeAttribute("readonly");
+
+        // Remove the readonly attribute from Monthly Income as well
+        document.getElementById("incomeField").removeAttribute("readonly");
+
+        document.getElementById("editButton").classList.add("d-none");
+        document.getElementById("saveButton").classList.remove("d-none");
+    });
+
+    setTimeout(function () {
+        const alertSuccess = document.querySelector(".alert-success");
+        const alertError = document.querySelector(".alert-danger");
+        if (alertSuccess) {
+            alertSuccess.style.transition = "opacity 0.5s";
+            alertSuccess.style.opacity = "0";
+            setTimeout(() => alertSuccess.remove(), 500);
+        }
+        if (alertError) {
+            alertError.style.transition = "opacity 0.5s";
+            alertError.style.opacity = "0";
+            setTimeout(() => alertError.remove(), 500);
+        }
+    }, 3000);
+</script>
+
+<style>
+    /* Custom CSS for Primary and Secondary Colors */
+
+    .card-header {
+        background-color: #2196F3;
+    }
+
+        .card-header h3 {
+            color: #fff;
+        }
+
+    .btn-primary {
+        background-color: #2196F3;
+        border: none;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+        .btn-primary:hover {
+            background-color: #1976D2; /* Slightly darker primary color */
+        }
+
+    .btn-secondary {
+        background-color: #D0E7F9;
+        color: #2196F3;
+        border: none;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+        .btn-secondary:hover {
+            background-color: #A0C8F4;
+        }
+
+    .alert-success {
+        background-color: #D0E7F9;
+        color: #2196F3;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .alert-danger {
+        background-color: #FFEBEE;
+        color: #F44336;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .form-control:focus {
+        border-color: #2196F3;
+        box-shadow: 0 0 0 0.25rem rgba(33, 150, 243, 0.25);
+    }
+ @{
+           @:media (max-width: 768px) {
+           @:.btn {
+           @:   width: 100%;
+           @:  margin-bottom: 10px;
+           @:}
+
+           @: .form-control {
+           @:    width: 100%;
+           @: }
+
+           @: .navbar-nav {
+           @:    text-align: center;
+           @: }
+
+           @:  .dropdown-menu {
+           @:     width: 100%;
+           @:  }
+           @:}
+         }
+</style>

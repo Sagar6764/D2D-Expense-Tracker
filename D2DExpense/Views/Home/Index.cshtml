@@ -1,0 +1,163 @@
+﻿@{
+    ViewData["Title"] = "Welcome";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            background-color: #f9fafb;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .feature-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+            margin: 15px auto;
+            border: 1px solid #D0E7F9;
+            border-radius: 10px;
+            padding: 20px;
+            background: #D0E7F9;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+            .feature-card:hover {
+                transform: translateY(-5px);
+                background: #f1f8ff;
+            }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2196F3;
+        }
+
+        .feature-card h5 {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .features-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .modal-header {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .modal-footer .btn {
+            background-color: #2196F3;
+            border: none;
+        }
+
+            .modal-footer .btn:hover {
+                background-color: #1976D2;
+            }
+            @{
+           @:media (max-width: 768px) {
+           @:.btn {
+           @:   width: 100%;
+           @:  margin-bottom: 10px;
+           @:}
+
+           @: .form-control {
+           @:    width: 100%;
+           @: }
+
+           @: .navbar-nav {
+           @:    text-align: center;
+           @: }
+
+           @:  .dropdown-menu {
+           @:     width: 100%;
+           @:  }
+           @:}
+         }
+    </style>
+</head>
+<body>
+    <div class="container mt-5 text-center">
+        <h1>Smart Expense Management for Modern Life</h1>
+        <p class="lead">Effortlessly track your daily expenses, analyze spending trends, and grow your wealth.</p>
+
+        <h3>Why Choose D2D Expense Tracker?</h3>
+        <div class="features-container">
+            <div class="feature-card">
+                <i class="fas fa-coins feature-icon"></i>
+                <h5>Smart Expense Tracking</h5>
+                <p>Log and categorize daily expenses in a seamless, hassle-free way.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-chart-line feature-icon"></i>
+                <h5>Visual Insights & Reports</h5>
+                <p>Generate interactive charts and graphs to better understand your financial health.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-user-friends feature-icon"></i>
+                <h5>Intuitive & Easy to Use</h5>
+                <p>A clean, modern design for a smooth financial management experience.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-piggy-bank feature-icon"></i>
+                <h5>Grow Your Investments</h5>
+                <p>Track your mutual fund SIPs and plan your financial future with ease.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div class="modal fade" id="userSelectionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Welcome!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Join us and take control of your finances today.</p>
+                    <div class="d-flex justify-content-around">
+                        <a href="@Url.Action("Register", "Account")" class="btn btn-success">New User</a>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">Existing User</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Show welcome modal after 5 seconds
+        setTimeout(function () {
+            var modal = new bootstrap.Modal(document.getElementById('userSelectionModal'));
+            modal.show();
+        }, 5000);
+    </script>
+</body>
+</html>

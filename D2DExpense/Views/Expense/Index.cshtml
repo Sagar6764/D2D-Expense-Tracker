@@ -1,0 +1,333 @@
+﻿@model List<Expense>
+@{
+    ViewData["Title"] = "Expense Tracker";
+}
+
+<div class="container">
+    <div class="header text-center p-3">
+        <h3 class="text-primary">Expense Tracker</h3>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+        <button class="btn btn-info px-4 py-2" id="btnAddExpense" data-bs-toggle="modal" data-bs-target="#expenseModal">+ Add</button>
+
+        <div class="d-flex gap-2">
+@*             <button class="btn btn-primary">Income: ₹@ViewBag.MonthlyIncome</button>
+ *@            <button class="btn btn-danger">Expense: ₹@ViewBag.TotalExpense</button>
+            <button class="btn btn-warning">Investment: ₹@ViewBag.TotalInvestment</button>
+@*             <button class="btn btn-success">Savings: ₹@ViewBag.TotalSavings</button>
+ *@        </div>
+
+        <input type="text" id="searchBar" class="form-control w-25" placeholder="Search Expense" />
+    </div>
+
+
+    <div class="d-flex justify-content-end mt-3">
+        <div class="btn-group">
+            <button class="btn btn-primary active" id="btnDaywise">Day-wise</button>
+            <button class="btn btn-secondary" id="btnMonthwise">Month-wise</button>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="expenseModalLabel">Add Expense</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-action="AddExpense" method="post">
+                        <input type="hidden" name="Email" value="@Context.Session.GetString("UserEmail")" />
+
+                        <div class="form-group">
+                            <label>Date/Month</label>
+                            <input type="date" id="dayInput" name="Date" class="form-control" />
+                            <input type="month" id="monthInput" name="Month" class="form-control" style="display:none;" />
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Expense Type</label>
+                            <select name="Type" id="expenseType" class="form-control">
+                                <option value="Expense">Expense</option>
+                                <option value="Investment">Investment</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="categoryList" name="Category" class="form-control">
+                                <option>Food</option>
+                                <option>Transport</option>
+                                <option>Rent</option>
+                                <option>Utilities</option>
+                                <option>Recharge</option>
+                                <option>Accessories</option>
+                                <option>Cash Withdrawl</option>
+                                <option>Exam Fee</option>
+                                <option>Other</option>
+                            </select>
+                            <input type="text" id="otherCategory" name="OtherCategory" class="form-control mt-2" placeholder="Enter category" style="display:none;" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" name="Amount" class="form-control" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-success mt-3">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table mt-4 table-bordered" id="expenseTable">
+        <thead class="bg-info text-white">
+            <tr>
+                <th>Date/Month</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr class="@(item.Date != DateTime.MinValue ? "day-row" : "month-row")">
+                        <td>@(item.Date != DateTime.MinValue ? item.Date.ToString("yyyy-MM-dd") : item.Month)</td>
+                        <td>@item.Type</td>
+                        <td>@item.Category</td>
+                        <td>@item.Amount</td>
+                        <td>
+                            <a asp-action="EditExpense" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                            <form asp-action="DeleteExpense" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No expense entries available</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="pagination">
+        @if ((int)ViewBag.CurrentPage > 1)
+        {
+            <a href="@Url.Action("Index", new { page = (int)ViewBag.CurrentPage - 1 })">Previous</a>
+        }
+
+        <span>Page @ViewBag.CurrentPage</span>
+
+        @if ((bool)ViewBag.HasNextPage)
+        {
+            <a href="@Url.Action("Index", new { page = (int)ViewBag.CurrentPage + 1 })">Next</a>
+        }
+    </div>
+
+</div>
+
+<script>
+    const btnDaywise = document.getElementById("btnDaywise");
+    const btnMonthwise = document.getElementById("btnMonthwise");
+    const dayRows = document.querySelectorAll(".day-row");
+    const monthRows = document.querySelectorAll(".month-row");
+
+    // Set day/month field visibility
+    function setDateFieldVisibility(isDaywise) {
+        document.getElementById("dayInput").style.display = isDaywise ? "block" : "none";
+        document.getElementById("monthInput").style.display = isDaywise ? "none" : "block";
+    }
+
+    // Update tab styles and row visibility
+    function updateView(isDaywise) {
+        if (isDaywise) {
+            btnDaywise.classList.add("btn-primary", "active");
+            btnDaywise.classList.remove("btn-secondary");
+            btnMonthwise.classList.add("btn-secondary");
+            btnMonthwise.classList.remove("btn-primary", "active");
+            dayRows.forEach(row => row.style.display = "");
+            monthRows.forEach(row => row.style.display = "none");
+        } else {
+            btnMonthwise.classList.add("btn-primary", "active");
+            btnMonthwise.classList.remove("btn-secondary");
+            btnDaywise.classList.add("btn-secondary");
+            btnDaywise.classList.remove("btn-primary", "active");
+            monthRows.forEach(row => row.style.display = "");
+            dayRows.forEach(row => row.style.display = "none");
+        }
+
+        setDateFieldVisibility(isDaywise);
+    }
+
+    // Handle tab clicks
+    btnDaywise.addEventListener("click", function () {
+        sessionStorage.setItem("activeView", "day");
+        updateView(true);
+    });
+
+    btnMonthwise.addEventListener("click", function () {
+        sessionStorage.setItem("activeView", "month");
+        updateView(false);
+    });
+
+    // On page load
+    document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const currentDate = `${yyyy}-${mm}-${dd}`;
+        const currentMonth = `${yyyy}-${mm}`;
+
+        // Set limits
+        const dayInput = document.getElementById("dayInput");
+        const monthInput = document.getElementById("monthInput");
+        dayInput.setAttribute("max", currentDate);
+        dayInput.value = currentDate;
+        monthInput.setAttribute("max", currentMonth);
+
+        // Restore last view from sessionStorage
+        const activeView = sessionStorage.getItem("activeView");
+        if (activeView === "month") {
+            updateView(false);
+        } else {
+            updateView(true);
+        }
+    });
+
+    // Category switching
+    document.getElementById("expenseType").addEventListener("change", function () {
+        const categoryList = document.getElementById("categoryList");
+        const otherCategoryInput = document.getElementById("otherCategory");
+
+        if (this.value === "Expense") {
+            categoryList.innerHTML = `
+                    <option>Food</option>
+                    <option>Transport</option>
+                    <option>Rent</option>
+                    <option>Utilities</option>
+                    <option>Recharge</option>
+                    <option>Accessories</option>
+                    <option>Cash Withdrawl</option>
+                    <option>Exam Fee</option>
+                    <option>Other</option>`;
+        } else {
+            categoryList.innerHTML = `
+                    <option>Stocks</option>
+                    <option>SIP</option>
+                    <option>LIC</option>
+                    <option>NPS</option>
+                    <option>PLI</option>
+                    <option>Other</option>`;
+        }
+
+        otherCategoryInput.style.display = "none";
+        otherCategoryInput.required = false;
+    });
+
+    document.getElementById("categoryList").addEventListener("change", function () {
+        const otherCategoryInput = document.getElementById("otherCategory");
+        if (this.value === "Other") {
+            otherCategoryInput.style.display = "block";
+        } else {
+            otherCategoryInput.style.display = "none";
+        }
+    });
+
+    // Search
+    document.getElementById("searchBar").addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+        const isDaywiseActive = btnDaywise.classList.contains("active");
+        const rows = isDaywiseActive ? document.querySelectorAll(".day-row") : document.querySelectorAll(".month-row");
+
+        rows.forEach(function (row) {
+            const cells = row.querySelectorAll("td");
+            let rowMatches = false;
+            cells.forEach(function (cell) {
+                if (cell.textContent.toLowerCase().includes(query)) {
+                    rowMatches = true;
+                }
+            });
+            row.style.display = rowMatches ? "" : "none";
+        });
+    });
+</script>
+
+<style>
+    /* Primary and secondary colors */
+    .btn-primary {
+        background-color: #2196F3;
+        border-color: #2196F3;
+    }
+
+        .btn-primary:hover {
+            background-color: #1976D2;
+            border-color: #1976D2;
+        }
+
+    .btn-secondary {
+        background-color: #D0E7F9;
+        border-color: #D0E7F9;
+    }
+
+        .btn-secondary:hover {
+            background-color: #B3D5F1;
+            border-color: #B3D5F1;
+        }
+
+    .btn-outline-secondary {
+        color: #2196F3;
+        border-color: #2196F3;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #2196F3;
+            color: white;
+            border-color: #2196F3;
+        }
+
+    .table th, .table td {
+        text-align: center;
+    }
+
+    .bg-info {
+        background-color: #2196F3 !important;
+    }
+
+    .text-primary {
+        color: #2196F3 !important;
+    }
+
+    .header {
+        background-color: #D0E7F9;
+        border-radius: 5px;
+    }
+
+    .modal-content {
+        border-radius: 8px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .d-flex {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    }
+
+</style>

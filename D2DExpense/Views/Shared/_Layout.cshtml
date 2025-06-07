@@ -1,0 +1,209 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - D2D Expense</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/D2DExpense.styles.css" asp-append-version="true" />
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1;
+        }
+
+        .navbar {
+            background: #2196F3;
+            padding: 12px 20px;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            color: #D0E7F9 !important;
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+            .navbar-brand img {
+                height: 50px;
+                width: auto;
+            }
+
+        .navbar-nav .nav-link {
+            color: #D0E7F9 !important;
+            font-weight: 500;
+            padding: 8px 16px;
+            transition: 0.3s;
+        }
+
+            .navbar-nav .nav-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 6px;
+            }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            color: #D0E7F9;
+            cursor: pointer;
+        }
+
+        .user-avatar-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-avatar-placeholder {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #007bff;
+            color: #D0E7F9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .user-name {
+            color: #D0E7F9;
+            font-weight: 500;
+        }
+
+        footer {
+            background: #2196F3;
+            color: #D0E7F9;
+            text-align: center;
+            padding: 15px 0;
+            font-weight: bold;
+        }
+
+        .dropdown-menu {
+            background-color: #2196F3;
+            border-radius: 6px;
+        }
+
+        .dropdown-item {
+            color: #D0E7F9;
+        }
+
+            .dropdown-item:hover {
+                background-color: #1976D2;
+            }
+
+        .d-flex {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
+        }
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/D2DLogo.png" asp-append-version="true" alt="D2DExpense Logo" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        
+
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("UserName") != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Expense" asp-action="Index">Expense</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Report" asp-action="Index">Report</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                            </li>
+                           
+
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav mb-2 mb-lg-0">
+                        @{
+                            var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName") ?? "User";
+                            var userInitial = userName.Substring(0, 1).ToUpper();
+                        }
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("UserName") != null)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle user-menu" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown">
+                                    <div class="user-avatar-container">
+                                        <div class="user-avatar-placeholder">@userInitial</div>
+                                        <span class="user-name">@userName</span>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Profile">Profile</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Sign Up</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 D2D Expense | Finance & Expense Tracking
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

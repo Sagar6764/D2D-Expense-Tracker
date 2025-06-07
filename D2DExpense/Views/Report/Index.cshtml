@@ -1,0 +1,268 @@
+﻿@{
+    ViewData["Title"] = "Report Generation";
+}
+
+<style>
+    :root {
+        --primary-color: #2196F3;
+        --secondary-color: #D0E7F9;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+    }
+
+    .header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 20px;
+    }
+
+        .header h3 {
+            margin: 0;
+        }
+
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .d-flex {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .flex-shrink-0 {
+        flex-shrink: 0;
+    }
+
+    .p-3 {
+        padding: 20px;
+    }
+
+    .bg-light {
+        background-color: var(--secondary-color);
+    }
+
+    .bg-white {
+        background-color: white;
+    }
+
+    .rounded {
+        border-radius: 10px;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background-color: #1976D2;
+            border-color: #1976D2;
+        }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+    .text-primary {
+        color: var(--primary-color);
+    }
+
+    .thead-light {
+        background-color: var(--secondary-color);
+    }
+
+    .table-bordered {
+        border: 1px solid #ddd;
+    }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        color: #0c5460;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+    .form-group select, .form-group input {
+        border-radius: 5px;
+    }
+
+    .btn {
+        border-radius: 5px;
+    }
+</style>
+
+<div class="container">
+    <div class="header text-center p-3">
+        <h3 class="text-white">Generate Report</h3>
+    </div>
+
+    <div class="d-flex mt-4">
+        <!-- Left Panel -->
+        <div class="flex-shrink-0 p-3 bg-light rounded shadow" style="min-width: 350px;">
+            <h5 class="text-primary text-center">Historical Viewer</h5>
+            <form method="post" asp-action="GenerateReport">
+                <div class="form-group">
+                    <label for="reportType">Select Report Type:</label>
+                    <select id="reportType" name="reportType" class="form-control" onchange="updateDateInputs()">
+                        <option value="Day">Day-wise</option>
+                        <option value="Month" selected>Month-wise</option>
+                        <option value="Year">Year-wise</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="dayInput" style="display:none;">
+                    <label for="selectedDate">Select Date:</label>
+                    <input type="date" id="selectedDate" name="selectedDate" class="form-control" />
+                </div>
+
+                <div class="form-group" id="monthInput">
+                    <label for="selectedMonth">Select Month:</label>
+                    <input type="month" id="selectedMonth" name="selectedMonth" class="form-control" />
+                </div>
+
+                <div class="form-group" id="yearInput" style="display:none;">
+                    <label for="selectedYear">Select Year:</label>
+                    <select id="selectedYear" name="selectedYear" class="form-control">
+                        @{
+                            for (int year = DateTime.Now.Year; year >= 2000; year--)
+                            {
+                                <option value="@year">@year</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryType">Select Type (Optional):</label>
+                    <select id="categoryType" name="categoryType" class="form-control" onchange="toggleCategoryOptions()">
+                        <option value="">-- All --</option>
+                        <option value="Expense">Expense</option>
+                        <option value="Investment">Investment</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="expenseCategories" style="display:none;">
+                    <label for="category">Select Expense Category:</label>
+                    <select id="category" name="category" class="form-control">
+                        <option value="">-- All --</option>
+                        <option>Food</option>
+                        <option>Transport</option>
+                        <option>Rent</option>
+                        <option>Utilities</option>
+                        <option>Recharge</option>
+                        <option>Accessories</option>
+                        <option>Cash Withdrawl</option>
+                        <option>Other</option>
+                        <option>Exam Fee</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="investmentCategories" style="display:none;">
+                    <label for="investmentCategory">Select Investment Category:</label>
+                    <select id="investmentCategory" name="investmentCategory" class="form-control">
+                        <option value="">-- All --</option>
+                        <option>Stocks</option>
+                        <option>SIP</option>
+                        <option>LIC</option>
+                        <option>NPS</option>
+                        <option>PLI</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3 w-100">Submit</button>
+            </form>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="flex-grow-1 p-3 bg-white rounded shadow">
+            <h5 class="text-primary text-center">Table Report</h5>
+            <div id="reportResult">
+                @if (ViewData["ReportData"] != null)
+                {
+                    var reportData = (List<ReportItem>)ViewData["ReportData"];
+                    if (reportData.Any())
+                    {
+                        <table class="table table-bordered mt-3">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in reportData)
+                                {
+                                    <tr>
+                                        <td>@(item.Date.HasValue ? item.Date.Value.ToString("yyyy-MM-dd") : item.Month)</td>
+                                        <td>@item.Category</td>
+                                        <td>@item.Amount</td>
+                                        <td>@item.Type</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td colspan="2"><strong>Total Amount Spent:</strong></td>
+                                    <td colspan="2"><strong>@ViewData["TotalAmountSpent"]</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info mt-3">
+                            <strong>No data available!</strong> No data found for the selected parameters.
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleCategoryOptions() {
+        var categoryType = document.getElementById('categoryType').value;
+        document.getElementById('expenseCategories').style.display = categoryType === 'Expense' ? 'block' : 'none';
+        document.getElementById('investmentCategories').style.display = categoryType === 'Investment' ? 'block' : 'none';
+    }
+
+    function updateDateInputs() {
+        var type = document.getElementById('reportType').value;
+        document.getElementById('dayInput').style.display = type === 'Day' ? 'block' : 'none';
+        document.getElementById('monthInput').style.display = type === 'Month' ? 'block' : 'none';
+        document.getElementById('yearInput').style.display = type === 'Year' ? 'block' : 'none';
+    }
+
+    window.onload = updateDateInputs;
+</script>

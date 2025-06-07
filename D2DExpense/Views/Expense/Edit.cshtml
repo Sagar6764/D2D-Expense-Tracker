@@ -1,0 +1,136 @@
+﻿@model D2DExpense.Models.Expense
+
+<h2 class="text-primary">Edit Expense</h2>
+
+@* @if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" id="errorMsg">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" id="successMsg">
+        @TempData["SuccessMessage"]
+    </div>
+} *@
+
+<form method="post">
+    <div class="form-group">
+        <label>Date/Month</label>
+        @if (Model.Date != DateTime.MinValue)
+        {
+            <input type="date" class="form-control" id="Date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" />
+        }
+        else
+        {
+            <input type="month" class="form-control" id="Month" name="Month" value="@Model.Month" />
+        }
+    </div>
+
+    <div class="form-group">
+        <label for="Type">Type</label>
+        <select class="form-control" id="Type" name="Type">
+            @if (Model.Type == "Expense")
+            {
+                <option value="Expense" selected>Expense</option>
+                <option value="Investment">Investment</option>
+            }
+            else
+            {
+                <option value="Expense">Expense</option>
+                <option value="Investment" selected>Investment</option>
+            }
+        </select>
+    </div>
+
+
+    <div class="form-group mb-3">
+        <label for="Category">Category</label>
+        <select id="categoryList" name="Category" class="form-control">
+            @{
+                var categories = Model.Type == "Investment"
+                ? new[] { "Stocks", "SIP", "LIC", "PLI", "NPS", "Other" }
+                : new[] { "Food", "Transport", "Rent", "Utilities", "Recharge", "Accessories", "Cash Withdrawl","Exam Fee", "Other" };
+
+                foreach (var cat in categories)
+                {
+                    if (Model.Category == cat)
+                    {
+                        <option value="@cat" selected>@cat</option>
+                    }
+                    else
+                    {
+                        <option value="@cat">@cat</option>
+                    }
+                }
+            }
+        </select>
+        @{
+            var showOther = Model.Category != null && !categories.Contains(Model.Category);
+        }
+        <input type="text" id="otherCategory" name="OtherCategory"
+               class="form-control mt-2"
+               placeholder="Enter category"
+               value="@(showOther ? Model.Category : "")"
+               style="@(showOther ? "display:block;" : "display:none;")" />
+    </div>
+
+    <div class="form-group">
+        <label for="Amount">Amount</label>
+        <input type="number" class="form-control" id="Amount" name="Amount" value="@Model.Amount" />
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Save</button>
+</form>
+
+@section Scripts {
+    <script>
+        // Auto-hide success or error messages after 3 seconds
+        setTimeout(function () {
+            const successMsg = document.getElementById("successMsg");
+            const errorMsg = document.getElementById("errorMsg");
+            if (successMsg) successMsg.style.display = "none";
+            if (errorMsg) errorMsg.style.display = "none";
+        }, 3000);
+        document.getElementById("Type").addEventListener("change", function () {
+            const categoryList = document.getElementById("categoryList");
+            const otherCategoryInput = document.getElementById("otherCategory");
+            if (this.value === "Expense") {
+                categoryList.innerHTML = `
+                                   <option>Food</option>
+         <option>Transport</option>
+         <option>Rent</option>
+         <option>Utilities</option>
+         <option>Recharge</option>
+         <option>Accessories</option>
+         <option>Cash Withdrawl</option>
+                  <option>Exam Fee</option>
+         <option>Other</option>
+                
+                        `;
+            } else {
+                categoryList.innerHTML = `
+                                    <option>Stocks</option>
+                                <option>SIP</option>
+                                <option>LIC</option>
+                                <option>NPS</option>
+                                <option>PLI</option>
+                                <option>Other</option>
+                        `;
+            }
+            otherCategoryInput.style.display = "none";
+        });
+
+       
+    </script>
+    <style>
+        .d-flex {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
+        }
+
+    </style>
+}

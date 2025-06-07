@@ -1,0 +1,186 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\D2DExpense\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|d:\\d2dexpense\\d2dexpense\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|solutionrelative:d2dexpense\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|d:\\d2dexpense\\d2dexpense\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|solutionrelative:d2dexpense\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|d:\\d2dexpense\\d2dexpense\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|solutionrelative:d2dexpense\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|d:\\d2dexpense\\d2dexpense\\models\\registermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|solutionrelative:d2dexpense\\models\\registermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|d:\\d2dexpense\\d2dexpense\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|solutionrelative:d2dexpense\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|d:\\d2dexpense\\d2dexpense\\models\\loginmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|solutionrelative:d2dexpense\\models\\loginmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|d:\\d2dexpense\\d2dexpense\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|solutionrelative:d2dexpense\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|d:\\d2dexpense\\d2dexpense\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|solutionrelative:d2dexpense\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|d:\\d2dexpense\\d2dexpense\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E4E22FB3-275F-4890-9254-BF92C05BAA54}|D2DExpense\\D2DExpense.csproj|solutionrelative:d2dexpense\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ErrorViewModel.cs",
+              "DocumentMoniker": "D:\\D2DExpense\\D2DExpense\\Models\\ErrorViewModel.cs",
+              "RelativeDocumentMoniker": "D2DExpense\\Models\\ErrorViewModel.cs",
+              "ToolTip": "D:\\D2DExpense\\D2DExpense\\Models\\ErrorViewModel.cs",
+              "RelativeToolTip": "D2DExpense\\Models\\ErrorViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-17T07:37:41.754Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RegisterModel.cs",
+              "DocumentMoniker": "D:\\D2DExpense\\D2DExpense\\Models\\RegisterModel.cs",
+              "RelativeDocumentMoniker": "D2DExpense\\Models\\RegisterModel.cs",
+              "ToolTip": "D:\\D2DExpense\\D2DExpense\\Models\\RegisterModel.cs",
+              "RelativeToolTip": "D2DExpense\\Models\\RegisterModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-17T07:35:08.759Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "D:\\D2DExpense\\D2DExpense\\Views\\Account\\Register.cshtml",
+              "RelativeDocumentMoniker": "D2DExpense\\Views\\Account\\Register.cshtml",
+              "ToolTip": "D:\\D2DExpense\\D2DExpense\\Views\\Account\\Register.cshtml",
+              "RelativeToolTip": "D2DExpense\\Views\\Account\\Register.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T07:18:24.25Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "D:\\D2DExpense\\D2DExpense\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "D2DExpense\\Views\\Account\\Login.cshtml",
+              "ToolTip": "D:\\D2DExpense\\D2DExpense\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "D2DExpense\\Views\\Account\\Login.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADEAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-18T06:02:56.412Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "LoginModel.cs",
+              "DocumentMoniker": "D:\\D2DExpense\\D2DExpense\\Models\\LoginModel.cs",
+              "RelativeDocumentMoniker": "D2DExpense\\Models\\LoginModel.cs",
+              "ToolTip": "D:\\D2DExpense\\D2DExpense\\Models\\LoginModel.cs",
+              "RelativeToolTip": "D2DExpense\\Models\\LoginModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-18T06:00:01.012Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\D2DExpense\\D2DExpense\\Program.cs",
+              "RelativeDocumentMoniker": "D2DExpense\\Program.cs",
+              "ToolTip": "D:\\D2DExpense\\D2DExpense\\Program.cs",
+              "RelativeToolTip": "D2DExpense\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-17T08:07:31.211Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\D2DExpense\\D2DExpense\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "D2DExpense\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\D2DExpense\\D2DExpense\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "D2DExpense\\Views\\Home\\Index.cshtml",
+              "ViewState": "AQIAAJQAAAAAAAAAAAAAAKMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T06:42:08.348Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "D:\\D2DExpense\\D2DExpense\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "D2DExpense\\Controllers\\AccountController.cs",
+              "ToolTip": "D:\\D2DExpense\\D2DExpense\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "D2DExpense\\Controllers\\AccountController.cs",
+              "ViewState": "AQIAAFgAAAAAAAAAAAD4vyQAAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-17T07:41:56.478Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\D2DExpense\\D2DExpense\\appsettings.json",
+              "RelativeDocumentMoniker": "D2DExpense\\appsettings.json",
+              "ToolTip": "D:\\D2DExpense\\D2DExpense\\appsettings.json",
+              "RelativeToolTip": "D2DExpense\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-02-17T07:57:21.431Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 30,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
