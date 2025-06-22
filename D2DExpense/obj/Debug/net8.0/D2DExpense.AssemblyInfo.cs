@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("D2DExpense")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ca24220c1edd54adcc689546da92fbed889d991")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+081d2f311c40f81e91b52f391ade523cd17fa220")]
 [assembly: System.Reflection.AssemblyProductAttribute("D2DExpense")]
 [assembly: System.Reflection.AssemblyTitleAttribute("D2DExpense")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

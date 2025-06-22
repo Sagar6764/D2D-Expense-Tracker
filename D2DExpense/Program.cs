@@ -1,25 +1,35 @@
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 
+// Create builder
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSession(); // Enable session
+// ✅ Call DatabaseInitializer with IConfiguration
+new DatabaseInitializer(builder.Configuration).EnsureTablesExist();
 
-// Add services to the container
+// ✅ Configure session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// ✅ Add MVC and HttpContext access
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpContextAccessor(); // Enable access to HttpContext
+builder.Services.AddHttpContextAccessor();
 
-// Add authentication
+// ✅ Authentication setup
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
-.AddCookie() // Enable cookie authentication
+.AddCookie()
 .AddGoogle(options =>
 {
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
@@ -27,11 +37,13 @@ builder.Services.AddAuthentication(options =>
     options.CallbackPath = "/signin-google";
 });
 
-// Ensure configuration is available for DI
+// Optional: Allow injecting IConfiguration if needed elsewhere
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
+// Build the app
 var app = builder.Build();
 
+// ✅ Environment-based error handling
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -42,15 +54,17 @@ else
     app.UseHsts();
 }
 
+// ✅ Middleware pipeline
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 
-app.UseSession(); // Enable session middleware
+app.UseSession();         // Session middleware
+app.UseAuthentication();  // Auth middleware
+app.UseAuthorization();   // Authorization
 
-app.UseAuthentication(); // ? Add authentication middleware
-app.UseAuthorization();  // ? Add authorization middleware
-
+// ✅ Default route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

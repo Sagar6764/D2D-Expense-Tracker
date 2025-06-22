@@ -9,6 +9,7 @@ namespace D2DExpense.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private string connectionString => _configuration.GetConnectionString("DefaultConnection") + ";Database=D2DExpenseDB;";
 
         public ReportController(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
