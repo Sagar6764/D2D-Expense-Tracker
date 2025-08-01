@@ -135,6 +135,7 @@ namespace D2DExpense.Controllers
                             return View(model);
                         }
 
+
                         // Store user data in session upon successful login
                         HttpContext.Session.SetInt32("UserID", userId);
                         HttpContext.Session.SetString("UserName", userName);
@@ -172,10 +173,10 @@ namespace D2DExpense.Controllers
                         {
                             model.Name = reader["Name"].ToString();
                             model.Email = reader["Email"].ToString();
-                            model.MonthlyIncome = Convert.ToDecimal(reader["MonthlyIncome"]);
+                            model.MonthlyIncome = reader["MonthlyIncome"] != DBNull.Value ? Convert.ToDecimal(reader["MonthlyIncome"]) : (decimal?)null;
                             model.Age = reader["Age"] != DBNull.Value ? Convert.ToInt32(reader["Age"]) : (int?)null;
                             model.MobileNumber = reader["MobileNumber"]?.ToString();
-                           
+
                         }
                     }
                 }
@@ -365,7 +366,7 @@ namespace D2DExpense.Controllers
                     int rowsAffected = updateCommand.ExecuteNonQuery();
                     if (rowsAffected > 0)
                     {
-                        
+
                         return RedirectToAction("Login");
                     }
                     else

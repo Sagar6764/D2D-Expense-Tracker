@@ -29,7 +29,7 @@ namespace D2DExpense.Models
         [Required]
 
         [Range(1, double.MaxValue, ErrorMessage = "Monthly Income must be a positive number.")]
-        public decimal MonthlyIncome { get; set; }
+        public decimal? MonthlyIncome { get; set; }
 
         [Required(ErrorMessage = "Age is required.")]
         [Range(18, 120, ErrorMessage = "Age must be between 18 and 120.")]

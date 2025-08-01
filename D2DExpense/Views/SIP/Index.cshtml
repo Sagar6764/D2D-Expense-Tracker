@@ -35,6 +35,28 @@
 
 <h2 class="text-center">SIP Tracker</h2>
 
+@if (ViewBag.TotalInvested != null && ViewBag.TotalCurrentValue != null)
+{
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="alert alert-info text-center fw-bold">
+                Total Invested: ₹@ViewBag.TotalInvested.ToString("F2")
+            </div>
+        </div>
+        <div class="col-md-6">
+            @{
+                var badgeClass = (decimal)ViewBag.TotalCurrentValue >= (decimal)ViewBag.TotalInvested
+                ? "alert-success"
+                : "alert-danger";
+            }
+            <div class="alert @badgeClass text-center fw-bold">
+                Current Value: ₹@ViewBag.TotalCurrentValue.ToString("F2")
+            </div>
+        </div>
+    </div>
+}
+
+
 <div class="row mb-4">
     <div class="col-md-6">
         <div class="card shadow">
@@ -43,7 +65,7 @@
                 <form method="post" asp-action="AddSIP">
                     <div class="form-group mb-2">
                         <label>SIP Name</label>
-                        <input name="sipName" class="form-control" required />
+                        <input id="sipNameInput" name="sipName" class="form-control" required />
                     </div>
                     <div class="form-group mb-2">
                         <label>Monthly Investment (₹)</label>
@@ -51,10 +73,17 @@
                     </div>
                     <div class="form-group mb-3">
                         <label>Start Date</label>
-                        <input name="startDate" type="date" class="form-control" required />
+                        <input name="startDate" type="date" class="form-control" required id="startDate" />
                     </div>
+
+                    <div class="form-group mb-3">
+                        <label>Scheme Code</label>
+                        <input id="schemeCodeInput" name="schemeCode" type="text" class="form-control" required readonly />
+                    </div>
+
                     <button type="submit" class="btn btn-primary w-100">Add SIP</button>
                 </form>
+
             </div>
         </div>
     </div>
@@ -75,7 +104,7 @@
                     </div>
                     <div class="form-group mb-2">
                         <label>NAV Date</label>
-                        <input name="navDate" type="date" class="form-control" required />
+                        <input name="navDate" type="date" class="form-control" required id="navDate" />
                     </div>
                     <div class="form-group mb-3">
                         <label>NAV</label>
@@ -88,6 +117,7 @@
     </div>
 </div>
 
+
 <h4 class="mb-3">SIP Overview</h4>
 
 <div class="accordion" id="sipAccordion">
@@ -99,18 +129,28 @@
 
         <div class="accordion-item mb-2">
             <h2 class="accordion-header" id="heading-@sip.SIPId">
+                @{
+                    var currentBadgeClass = sip.CurrentValue >= sip.InvestedAmount ? "bg-success" : "bg-danger";
+                }
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@sipId">
                     <strong>@sip.SIPName</strong> - ₹@sip.MonthlyAmount.ToString("F2") | Start: @sip.StartDate.ToString("dd-MM-yyyy")
+                    <div>
+                        <span class="badge bg-info text-dark">Invested: ₹@sip.InvestedAmount.ToString("F2")</span>
+                        <span class="badge @currentBadgeClass">Current: ₹@sip.CurrentValue.ToString("F2")</span>
+                    </div>
                 </button>
+
             </h2>
             <div id="@sipId" class="accordion-collapse collapse">
                 <div class="accordion-body">
                     <div class="d-flex justify-content-end mb-2">
                         <button class="btn btn-sm btn-warning me-2" data-bs-toggle="modal" data-bs-target="#editModal"
                                 data-id="@sip.SIPId" data-name="@sip.SIPName"
-                                data-amount="@sip.MonthlyAmount" data-start="@sip.StartDate.ToString("yyyy-MM-dd")">
+                                data-amount="@sip.MonthlyAmount" data-start="@sip.StartDate.ToString("yyyy-MM-dd")"
+                                data-scheme="@sip.SchemeCode">
                             Edit SIP
                         </button>
+
                         <form asp-action="DeleteSIP" method="post">
                             <input type="hidden" name="sipId" value="@sip.SIPId" />
                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
@@ -193,7 +233,11 @@
                     </div>
                     <div class="form-group">
                         <label>Start Date</label>
-                        <input type="date" class="form-control" id="editStartDate" name="startDate" required />
+                        <input type="date" class="form-control" id="editStartDate" name="startDate" required id="startDate" />
+                    </div>
+                    <div class="form-group">
+                        <label>Scheme Code</label>
+                        <input type="text" class="form-control" id="editSchemeCode" name="schemeCode" required readonly />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -219,7 +263,7 @@
                     <input type="hidden" id="editSipForTransaction" name="sipId" />
                     <div class="form-group">
                         <label>NAV Date</label>
-                        <input type="date" class="form-control" id="editTransactionDate" name="navDate" required />
+                        <input type="date" class="form-control" id="editTransactionDate" name="navDate" required id="navDate" />
                     </div>
                     <div class="form-group">
                         <label>NAV</label>
@@ -245,6 +289,8 @@
             document.getElementById('editSipName').value = button.getAttribute('data-name');
             document.getElementById('editMonthlyAmount').value = button.getAttribute('data-amount');
             document.getElementById('editStartDate').value = button.getAttribute('data-start');
+            document.getElementById('editSchemeCode').value = button.getAttribute('data-scheme');
+
         });
 
         var editTxModal = document.getElementById('editTransactionModal');
@@ -254,6 +300,30 @@
             document.getElementById('editTransactionDate').value = button.getAttribute('data-date');
             document.getElementById('editTransactionNAV').value = button.getAttribute('data-nav');
             document.getElementById('editSipForTransaction').value = button.getAttribute('data-sipid');
+        });
+        document.getElementById("sipNameInput").addEventListener("blur", function () {
+            const sipName = this.value.trim();
+            if (!sipName) return;
+
+            fetch(`/SIP/GetSchemeCodeOnline?sipName=${encodeURIComponent(sipName)}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("schemeCodeInput").value = data.schemeCode || "";
+                })
+                .catch(err => console.error("Scheme code fetch failed:", err));
+        });
+        const today = new Date().toISOString().split("T")[0];
+
+        // Apply 'max' and default 'value' for all date inputs
+        const dateInputs = ["startDate", "navDate", "editStartDate", "editTransactionDate"];
+        dateInputs.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.setAttribute("max", today);
+                if (!input.value) {
+                    input.value = today;
+                }
+            }
         });
     </script>
 }

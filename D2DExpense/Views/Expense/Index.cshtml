@@ -12,11 +12,10 @@
         <button class="btn btn-info px-4 py-2" id="btnAddExpense" data-bs-toggle="modal" data-bs-target="#expenseModal">+ Add</button>
 
         <div class="d-flex gap-2">
-@*             <button class="btn btn-primary">Income: ₹@ViewBag.MonthlyIncome</button>
- *@            <button class="btn btn-danger">Expense: ₹@ViewBag.TotalExpense</button>
+           <button class="btn btn-danger">Expense: ₹@ViewBag.TotalExpense</button>
             <button class="btn btn-warning">Investment: ₹@ViewBag.TotalInvestment</button>
-@*             <button class="btn btn-success">Savings: ₹@ViewBag.TotalSavings</button>
- *@        </div>
+            <button class="btn btn-danger">Total: ₹@ViewBag.Total</button>
+       </div>
 
         <input type="text" id="searchBar" class="form-control w-25" placeholder="Search Expense" />
     </div>
@@ -63,11 +62,13 @@
                                 <option>Transport</option>
                                 <option>Rent</option>
                                 <option>Utilities</option>
+                                <option>Grocery</option>
                                 <option>Recharge</option>
-                                <option>Accessories</option>
+                                <option>Clothing & Accessories</option> <!-- ✅ Clear & inclusive -->
                                 <option>Cash Withdrawl</option>
                                 <option>Exam Fee</option>
                                 <option>Other</option>
+
                             </select>
                             <input type="text" id="otherCategory" name="OtherCategory" class="form-control mt-2" placeholder="Enter category" style="display:none;" />
                         </div>
@@ -83,6 +84,56 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Expense Modal -->
+    <div class="modal fade" id="editExpenseModal" tabindex="-1" aria-labelledby="editExpenseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" asp-controller="Expense" asp-action="EditExpense">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editExpenseModalLabel">Edit Expense</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="hidden" name="Id" id="editExpenseId" />
+                        <input type="hidden" name="Email" value="@Context.Session.GetString("UserEmail")" />
+
+                        <div class="form-group">
+                            <label>Date/Month</label>
+                            <input type="date" id="editDayInput" name="Date" class="form-control" />
+                            <input type="month" id="editMonthInput" name="Month" class="form-control" style="display:none;" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Expense Type</label>
+                            <select name="Type" id="editExpenseType" class="form-control">
+                                <option value="Expense">Expense</option>
+                                <option value="Investment">Investment</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="editCategoryList" name="Category" class="form-control"></select>
+                            <input type="text" id="editOtherCategory" name="OtherCategory" class="form-control mt-2" placeholder="Enter category" style="display:none;" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" name="Amount" id="editAmount" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <table class="table mt-4 table-bordered" id="expenseTable">
         <thead class="bg-info text-white">
@@ -105,7 +156,18 @@
                         <td>@item.Category</td>
                         <td>@item.Amount</td>
                         <td>
-                            <a asp-action="EditExpense" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                            <button class="btn btn-warning btn-sm btnEditExpense"
+                                    data-id="@item.Id"
+                                    data-date="@item.Date.ToString("yyyy-MM-dd")"
+                                    data-month="@item.Month"
+                                    data-type="@item.Type"
+                                    data-category="@item.Category"
+                                    data-amount="@item.Amount"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editExpenseModal">
+                                Edit
+                            </button>
+
                             <form asp-action="DeleteExpense" method="post" style="display:inline;">
                                 <input type="hidden" name="id" value="@item.Id" />
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -215,15 +277,17 @@
 
         if (this.value === "Expense") {
             categoryList.innerHTML = `
-                    <option>Food</option>
-                    <option>Transport</option>
-                    <option>Rent</option>
-                    <option>Utilities</option>
-                    <option>Recharge</option>
-                    <option>Accessories</option>
-                    <option>Cash Withdrawl</option>
-                    <option>Exam Fee</option>
-                    <option>Other</option>`;
+                        <option>Food</option>
+    <option>Transport</option>
+    <option>Rent</option>
+    <option>Utilities</option>
+    <option>Grocery</option>
+    <option>Recharge</option>
+    <option>Clothing & Accessories</option> 
+    <option>Cash Withdrawl</option>
+    <option>Exam Fee</option>
+    <option>Other</option>
+    `;
         } else {
             categoryList.innerHTML = `
                     <option>Stocks</option>
@@ -263,6 +327,122 @@
             });
             row.style.display = rowMatches ? "" : "none";
         });
+    });
+
+    document.querySelectorAll('.btnEditExpense').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const date = this.getAttribute('data-date');
+            const month = this.getAttribute('data-month');
+            const type = this.getAttribute('data-type');
+            const category = this.getAttribute('data-category');
+            const amount = this.getAttribute('data-amount');
+
+            document.getElementById('editExpenseId').value = id;
+            document.getElementById('editAmount').value = amount;
+            document.getElementById('editExpenseType').value = type;
+
+            // Set date/month
+            if (date && date !== "0001-01-01") {
+                document.getElementById("editDayInput").style.display = "block";
+                document.getElementById("editMonthInput").style.display = "none";
+                document.getElementById("editDayInput").value = date;
+                document.getElementById("editMonthInput").value = "";
+            } else {
+                document.getElementById("editDayInput").style.display = "none";
+                document.getElementById("editMonthInput").style.display = "block";
+                document.getElementById("editMonthInput").value = month;
+                document.getElementById("editDayInput").value = "";
+            }
+
+            // Populate category list
+            const catList = document.getElementById('editCategoryList');
+            const otherCat = document.getElementById('editOtherCategory');
+
+            if (type === 'Expense') {
+                catList.innerHTML = `
+                        <option>Food</option>
+                        <option>Transport</option>
+                        <option>Rent</option>
+                        <option>Utilities</option>
+                        <option>Grocery</option>
+                        <option>Recharge</option>
+                        <option>Clothing & Accessories</option>
+                        <option>Cash Withdrawl</option>
+                        <option>Exam Fee</option>
+                        <option>Other</option>
+                    `;
+            } else {
+                catList.innerHTML = `
+                        <option>Stocks</option>
+                        <option>SIP</option>
+                        <option>LIC</option>
+                        <option>NPS</option>
+                        <option>PLI</option>
+                        <option>Other</option>
+                    `;
+            }
+
+            let matched = false;
+            Array.from(catList.options).forEach(opt => {
+                if (opt.value === category) {
+                    opt.selected = true;
+                    matched = true;
+                }
+            });
+
+            if (!matched) {
+                catList.value = "Other";
+                otherCat.value = category;
+                otherCat.style.display = "block";
+            } else {
+                otherCat.value = "";
+                otherCat.style.display = "none";
+            }
+        });
+    });
+
+    // Show other category input if "Other" selected
+    document.getElementById("editCategoryList").addEventListener("change", function () {
+        const otherInput = document.getElementById("editOtherCategory");
+        if (this.value === "Other") {
+            otherInput.style.display = "block";
+        } else {
+            otherInput.style.display = "none";
+        }
+    });
+
+    // Update category list when type changes
+    document.getElementById("editExpenseType").addEventListener("change", function () {
+        const selectedType = this.value;
+        const catList = document.getElementById('editCategoryList');
+        const otherCat = document.getElementById('editOtherCategory');
+
+        if (selectedType === "Expense") {
+            catList.innerHTML = `
+                    <option>Food</option>
+                    <option>Transport</option>
+                    <option>Rent</option>
+                    <option>Utilities</option>
+                    <option>Grocery</option>
+                    <option>Recharge</option>
+                    <option>Clothing & Accessories</option>
+                    <option>Cash Withdrawl</option>
+                    <option>Exam Fee</option>
+                    <option>Other</option>
+                `;
+        } else {
+            catList.innerHTML = `
+                    <option>Stocks</option>
+                    <option>SIP</option>
+                    <option>LIC</option>
+                    <option>NPS</option>
+                    <option>PLI</option>
+                    <option>Other</option>
+                `;
+        }
+
+        otherCat.style.display = "none";
     });
 </script>
 

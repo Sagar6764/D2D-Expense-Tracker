@@ -46,13 +46,14 @@ namespace D2DExpense.Controllers
         public IActionResult Dashboard()
         {
             var userId = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
+            string email = _httpContextAccessor.HttpContext.Session.GetString("UserEmail");
 
-            if (userId == null)
+            if (userId == null || string.IsNullOrEmpty(email))
             {
-                return RedirectToAction("Index"); // If not logged in, redirect to index page
+                return RedirectToAction("Index"); // Redirect if not logged in or email not set
             }
 
-            string email = _httpContextAccessor.HttpContext.Session.GetString("UserEmail");
+
             decimal monthlyIncome = 0;
             decimal totalExpense = 0;
             decimal totalInvestment = 0;
@@ -99,7 +100,13 @@ namespace D2DExpense.Controllers
             }
 
             // Calculate Savings
+            // Calculate Savings
             decimal totalSavings = monthlyIncome - (totalExpense + totalInvestment);
+            if (totalSavings < 0)
+            {
+                totalSavings = 0;
+            }
+
 
             // Pass data to the view
             ViewBag.MonthlyIncome = monthlyIncome;

@@ -18,7 +18,10 @@
         public string SIPName { get; set; }
         public decimal MonthlyAmount { get; set; }
         public DateTime StartDate { get; set; }
+         public string SchemeCode { get; set; }
 
         public List<SIPTransaction> Transactions { get; set; } = new();
+        public decimal InvestedAmount { get; set; } // Add this
+        public decimal CurrentValue { get; set; }
     }
 }

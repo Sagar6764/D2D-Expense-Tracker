@@ -32,15 +32,24 @@ public class DatabaseInitializer
                 END;
 
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SIPDetails')
-                BEGIN
-                    CREATE TABLE SIPDetails (
-                        Id INT IDENTITY(1,1) PRIMARY KEY,
-                        Email NVARCHAR(100),
-                        SIPName NVARCHAR(100),
-                        MonthlyAmount DECIMAL(10,2),
-                        StartDate DATE
-                    );
-                END;
+BEGIN
+    CREATE TABLE SIPDetails (
+        Id INT IDENTITY(1,1) PRIMARY KEY,
+        Email NVARCHAR(100),
+        SIPName NVARCHAR(100),
+        MonthlyAmount DECIMAL(10,2),
+        StartDate DATE,
+        SchemeCode NVARCHAR(10) -- 👈 Added this line
+    );
+END
+ELSE IF NOT EXISTS (
+    SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+    WHERE TABLE_NAME = 'SIPDetails' AND COLUMN_NAME = 'SchemeCode'
+)
+BEGIN
+    ALTER TABLE SIPDetails ADD SchemeCode NVARCHAR(10) DEFAULT('');
+END;
+
 
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SIPTransactions')
                 BEGIN

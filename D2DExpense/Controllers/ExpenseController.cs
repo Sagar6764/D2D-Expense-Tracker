@@ -24,6 +24,7 @@ namespace D2DExpense.Controllers
             List<Expense> expenses = new List<Expense>();
             decimal totalExpense = 0;
             decimal totalInvestment = 0;
+            decimal total = 0;
             int pageSize = 30;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -89,6 +90,7 @@ namespace D2DExpense.Controllers
 
             ViewBag.TotalExpense = totalExpense;
             ViewBag.TotalInvestment = totalInvestment;
+            ViewBag.Total = totalExpense + totalInvestment;
             ViewBag.CurrentPage = page;
             ViewBag.PageSize = pageSize;
             ViewBag.HasNextPage = expenses.Count == pageSize;
